@@ -3,6 +3,9 @@ package NotDefault;
 
 import java.util.Scanner;
 
+/*
+ *  Ето този клас прави едно единствено нещо, което е ок. Може би тук трябва да е позиционирана цялата клиентска логика - тоест всичката работа с конзолата
+ */
 public class Menu {
 	
 	public static void showMenuForApp(){

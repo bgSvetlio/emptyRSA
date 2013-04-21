@@ -6,20 +6,33 @@ import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Scanner;
 
+/*
+ * 	Тук са преплетени 3 различни неща регистрация, клиент, услуга и дори четене от конзола. Когато тръгнем да разширяваме 
+ * 	всяко от 3-те неща класът ще стане невъобразим за поддръжка и разширение.
+ */
+
 public class Appointment {
+	
+	// Трябва да помислим как правилно да разпределим всичко по-долу в класове, които отговарят само за 1 точно определено нещо (важи за всички полета)
 	private String firstName;
 	private String lastName;
 	private String telephoneNumber;
 	private ServiceForThisDay service;
+	
+	// самото наличие на някакъв флаг по-който разбираш какво един клас трябва да прави веднага алармира, че има нещо нередно и че имплементацията може би
+	// трябва да се раздели в някаква подходяща йерархия
 	private String serviceType;
+	
 	private Calendar cal;
 	
-	
+	// Могъщ конструктор, който освен да инициализира полета знае прекалено много неща и има мн логика в него
 	public Appointment(){
 		Date date = new Date();
 		int hairCut;
 		int year,month,day; 
 		boolean dayExists = false;
+		
+		//Един обект който просто знае какво съдържа една резервация (прост носител на данни) не би трябвало да знае как да ги чете и обработва от конзола
 		Scanner input1 = new Scanner(System.in);
 		
 		System.out.println("Enter your first name:");
@@ -58,12 +71,14 @@ public class Appointment {
 		
 		cal = new GregorianCalendar(year, month-1, day);
 		//System.out.println(cal.getTime());
+		
+		// При така направена проверка мисля, че не мога да си направя резервация с днешна дата ?
 		if(date.after(cal.getTime())){
 			System.out.println("the day you have entered for the appointment is in the past!");
 			return;
 		}
 		
-		
+		// Много ми харесва проверката с почивните дни не се бях сетил :)
 		if(cal.getTime().getDay()==6 || cal.getTime().getDay()==0){
 			System.out.println("This day is from weekend! We don't work this day. Try to make another appointment");
 			return;
@@ -83,6 +98,7 @@ public class Appointment {
 			return;
 		}
 		
+		// На базата на флагове нещо се променя, което не е много ок
 		if(hairCut==1){
 			this.serviceType = "woman hair cut";
 		}else if(hairCut==2){
@@ -99,7 +115,12 @@ public class Appointment {
 				//System.out.println("stara referenciq");
 				//System.out.println();
 				
+				// Тук самия патърн ми е малко странен, но това ще го обсъдим утре.
+
+				// Модифицираш обект който вече е направен за друга резервация. Сега е добре защото не ползваш съответното поле, но
+				// в бъдеще може да донесе проблеми като странно некоректно поведение на някой модул.
 				this.service.setService(hairCut);
+				
 				this.service.chooseHourForService();
 				dayExists= true;
 			}
@@ -116,6 +137,7 @@ public class Appointment {
 			this.service.chooseHourForService();
 		}
 		
+		// Парче логика, което е доста трудно разбираемо... Доколкото разбирам просто си подсигуряваш запазването на точния час на резервацията в Date обекта
 		if(hairCut==1){
 			this.cal.set(year, month-1, day, this.service.getAppW(), 0);
 		}else if(hairCut==2){
@@ -128,6 +150,7 @@ public class Appointment {
 		
 		List.addAppointment(this);
 		
+		// Затваряне на ресурса ?
 		//input1.close();
 	}
 	
