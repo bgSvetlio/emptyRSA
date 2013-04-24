@@ -1,6 +1,6 @@
 package NotDefault;
 
-/*	NOTES:
+/*	NOTES: 
  * 
  * 1. Много добро владеене на езика
  * 2. Решението е чисто процедурно и няма много обектно ориентиран код и съответните принципи
@@ -10,11 +10,14 @@ package NotDefault;
  * 6. Кодът не е лесен за подръжка и разширение - добавянето на функционалност ще коства модифицирането на голяма част от кода (Open Closed Principle)
  * 7. Overengineering на места - по-сложно отколкото описанието и идеята го изисква (тука и ние сме виновни щото дефиницията не е мн информативна)
  * 8. На места не съм съгласен чисто функционално - за избирането на часове и ограничаването им - 9, 10, 11, а защо не 9:45, 11:20 и т.н. ?
+ * 
+ * 
+ * 
  * 9. Трябва хубаво да отделим модел - бизнес логика - презентационна логика
  * 
  */
 
-import java.util.Calendar;
+import java.util.Calendar; 
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.Scanner;
@@ -125,6 +128,15 @@ public static LinkedList<Appointment> list = new LinkedList<Appointment>();
 		if(!appExists){
 			System.out.println("there is no such appointment in the list.");
 		}
+		
+		
+		
+		Calendar cal = new GregorianCalendar();
+		
+		
+		//long timeInMillsi = cal.getTimeInMillis();
+		//timeInMillsi + service.getTi
+		
 		
 	}
 
