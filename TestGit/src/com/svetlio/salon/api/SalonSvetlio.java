@@ -10,6 +10,13 @@ import NotDefault.Appointment;
 import com.svetlio.salon.exceptions.ReservationCollision;
 import com.svetlio.salon.model.Reservation;
 
+
+/*
+ *  Ima kakvo o6te da obsudim po implementaciqta, no tova 6te go pisha kato ima vreme. Ina4e otkum testove i struktura po4na da stava prili4no ve4e :)
+ *  Mislex da ti ka4a edna moq reference implementaciq na salona bazirana vurhu tvoito reshenie, no reshix 4e ne e uda4no po-dobre sam da se pomu4ish
+ *  i kogato stigne uzrql state 6te gi sravnim i 6te izgovorim predimstva i nedostatuci na dvete :). Zasega e tova o4akvai pak vklu4vane ;D
+ */
+
 public class SalonSvetlio implements Salon {
 	public static final int ARG_FOR_YEAR_IN_CALENDAR=1;
 	public static final int ARG_FOR_MONTH_IN_CALENDAR=2;

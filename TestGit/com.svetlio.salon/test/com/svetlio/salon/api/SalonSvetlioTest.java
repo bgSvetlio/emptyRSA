@@ -15,6 +15,10 @@ import com.svetlio.salon.model.ManHairCut;
 import com.svetlio.salon.model.Reservation;
 import com.svetlio.salon.model.Service;
 
+/*
+ * Dobre sa testovete iskam da se opitavsh da napravish podoben test vurhu starata implementaciq da vidish kakvo 6te ozna4ava tova. Da kajem za add
+ */
+
 public class SalonSvetlioTest {
 	static SalonSvetlio ss;
 	static Reservation r;
