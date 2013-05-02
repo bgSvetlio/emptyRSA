@@ -16,7 +16,7 @@ import com.svetlio.salon.model.Reservation;
 import com.svetlio.salon.model.Service;
 
 /*
- * Dobre sa testovete iskam da se opitavsh da napravish podoben test vurhu starata implementaciq da vidish kakvo 6te ozna4ava tova. Da kajem za add
+ * Ne mislq 4e pri starata implementaciq testa 6te e su6tiq prosto nqma takuv modul a sig 6te trqbva da simulirash i vhod ot konzola.
  */
 
 public class SalonSvetlioTest {

@@ -15,8 +15,14 @@ import com.svetlio.salon.model.Reservation;
 import com.svetlio.salon.model.Service;
 import com.svetlio.salon.model.WomanHairCut;
 
-
+/*
+ * Zashto ima nqkolko instancii na salona, toi e edin - zatova li polzvash lista stati4no ???
+ * Ne nujno vsi4ko v Consolniq Client da e stati4no - toi moje da si e napulno normalen klas - da se instancira,
+ * da mu se podava salon i da si vurshi rabota...
+ */
 public class ConsoleClient {
+	
+	//Pak povtarq6tite se konstanti
 	public static final int ARG_FOR_YEAR_IN_CALENDAR=1;
 	public static final int ARG_FOR_MONTH_IN_CALENDAR=2;
 	public static final int ARG_FOR_DAY_IN_CALENDAR=5;
@@ -132,6 +138,10 @@ public class ConsoleClient {
 		System.out.println(" 2. Woman hair cut.");
 		serviceTypeChoice = input.nextInt();
 		
+		/*
+		 * Tuka moje pak da skriem implementaciqta primerno sus Factory Pattern-a.
+		 * Iskame modulite da razbirat samo ot abstrakcii, i nikoi da ne znae za implementaciite.
+		 */
 		switch(serviceTypeChoice){
 		case 1: service = new ManHairCut();
 		break;
@@ -148,7 +158,10 @@ public class ConsoleClient {
 		
 		hourWithMinutes =input.nextDouble();
 		
-		
+		/*
+		 *  Iztrii komentarite tova e murtav kod i samo porajda vuprosi - Dali tova e vajno,
+		 *  da go iztriq li, kakvo e iskal da mi kaje avtora kato go e ostavil.
+		 */
 		if(hourWithMinutes<9 || hourWithMinutes>18-0.4-(double)service.getDurationInMinutes()/100){
 			System.out.println("you have entered invalid hour.");
 			//input.close();
