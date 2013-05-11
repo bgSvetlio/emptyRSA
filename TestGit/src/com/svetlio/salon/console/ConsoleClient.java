@@ -1,12 +1,12 @@
 package com.svetlio.salon.console;
 
-//import java.text.DecimalFormat; 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.Scanner;
 
 
+import com.svetlio.salon.api.Salon;
 import com.svetlio.salon.api.SalonSvetlio;
 import com.svetlio.salon.exceptions.ReservationCollision;
 import com.svetlio.salon.model.Customer;
@@ -15,22 +15,19 @@ import com.svetlio.salon.model.Reservation;
 import com.svetlio.salon.model.Service;
 import com.svetlio.salon.model.WomanHairCut;
 
-/*
- * Zashto ima nqkolko instancii na salona, toi e edin - zatova li polzvash lista stati4no ???
- * Ne nujno vsi4ko v Consolniq Client da e stati4no - toi moje da si e napulno normalen klas - da se instancira,
- * da mu se podava salon i da si vurshi rabota...
- */
+
 public class ConsoleClient {
 	
-	//Pak povtarq6tite se konstanti
-	public static final int ARG_FOR_YEAR_IN_CALENDAR=1;
-	public static final int ARG_FOR_MONTH_IN_CALENDAR=2;
-	public static final int ARG_FOR_DAY_IN_CALENDAR=5;
-	public static final int ARG_FOR_HOURS_IN_CALENDAR=11;
-	public static final int ARG_FOR_MINUTES_IN_CALENDAR=12;
+	Salon salonSvetlio;
 	
-	public static void showMenu(){
+	public ConsoleClient(Salon salonSvetlio){
+		this.salonSvetlio = salonSvetlio;
+		
+	}
+	
+	public void showMenu(){
 		Scanner input = new Scanner(System.in);
+		
 		do{
 			int choice;
 			
@@ -43,6 +40,7 @@ public class ConsoleClient {
 			System.out.println();
 			
 			choice = input.nextInt();
+			
 			if(choice==0) break;
 			
 			switch(choice){
@@ -59,10 +57,11 @@ public class ConsoleClient {
 			}
 			
 		}while(true);
-		//input.close();
+		
+		input.close();
 	}
 	
-	private static void addReservation(){
+	private void addReservation(){
 		String firstName,lastName;
 		long telephoneNumber;
 		int year,month,day;
@@ -89,7 +88,6 @@ public class ConsoleClient {
 		year = input.nextInt();
 		if(year != 2013 && year != 2014){
 			System.out.println("you have entered wrong year.");
-			//input.close();
 			return;
 		}
 		
@@ -97,7 +95,6 @@ public class ConsoleClient {
 		month = input.nextInt();
 		if(month<1 || month>12){
 			System.out.println("you have entered invalid month.");
-			//input.close();
 			return;
 		}
 		
@@ -105,19 +102,16 @@ public class ConsoleClient {
 		day = input.nextInt();
 		if(day<1 || day>31){
 			System.out.println("you have entered invalid day.");
-			//input.close();
 			return;
 		}
 		
 		Calendar cal = new GregorianCalendar(year, month-1, day);
 		
 		
-		if(dateToday.get(ARG_FOR_YEAR_IN_CALENDAR)!=year || dateToday.get(ARG_FOR_MONTH_IN_CALENDAR)!=month-1 
-				|| dateToday.get(ARG_FOR_DAY_IN_CALENDAR)!=day){
-			//System.out.println("the date is not today");
+		if(dateToday.get(GregorianCalendar.YEAR)!=year || dateToday.get(GregorianCalendar.MONTH)!=month-1 
+				|| dateToday.get(GregorianCalendar.DAY_OF_MONTH)!=day){
 			if(dateToday.after(cal)){
 				System.out.println("the day you have entered for the appointment is in the past!");
-				//input.close();
 				return;
 			}
 			
@@ -125,7 +119,6 @@ public class ConsoleClient {
 		
 		if(cal.getTime().getDay()==6 || cal.getTime().getDay()==0){
 			System.out.println("This day is from weekend! We don't work this day. Try to make another appointment");
-			//input.close();
 			return;
 		}
 		else {
@@ -138,66 +131,45 @@ public class ConsoleClient {
 		System.out.println(" 2. Woman hair cut.");
 		serviceTypeChoice = input.nextInt();
 		
-		/*
-		 * Tuka moje pak da skriem implementaciqta primerno sus Factory Pattern-a.
-		 * Iskame modulite da razbirat samo ot abstrakcii, i nikoi da ne znae za implementaciite.
-		 */
-		switch(serviceTypeChoice){
-		case 1: service = new ManHairCut();
-		break;
-		case 2: service = new WomanHairCut();
-		break;
-		default: System.out.println("You have entered non-existing service");
-		//input.close();
-		return;
+
+		if(getServiceInstance(serviceTypeChoice)== null){
+			System.out.println("You have entered non-existing service");
+			return;
+		}else{
+			service = getServiceInstance(serviceTypeChoice);
 		}
 		
+		System.out.println();
 		System.out.println("Our working time is between 9AM and 6PM.");
 		System.out.printf("the procedure lasts %d minutes\n",service.getDurationInMinutes());
 		System.out.println("Enter hour and minutes for the reservation: ");
 		
 		hourWithMinutes =input.nextDouble();
-		
-		/*
-		 *  Iztrii komentarite tova e murtav kod i samo porajda vuprosi - Dali tova e vajno,
-		 *  da go iztriq li, kakvo e iskal da mi kaje avtora kato go e ostavil.
-		 */
 		if(hourWithMinutes<9 || hourWithMinutes>18-0.4-(double)service.getDurationInMinutes()/100){
 			System.out.println("you have entered invalid hour.");
-			//input.close();
 			return;
 		}
-		//hourWithMinutes = Double.parseDouble(new DecimalFormat("#.##").format(hourWithMinutes));
-		//System.out.println("hour with minutes "+hourWithMinutes);
 		
 		hour = (int)hourWithMinutes;
-		//System.out.println("hour "+hour);
 		doubleMinutes = (hourWithMinutes - (int)hourWithMinutes)*100;
-		//System.out.println("double minutes "+doubleMinutes);
 		integerMinutes = (int)doubleMinutes;
-		//System.out.println("int minutes "+integerMinutes);
 		
 		Calendar calendar = new GregorianCalendar(year, month-1, day, hour, integerMinutes);
-		//System.out.println(calendar.getTime());
-		
+	
 		Reservation reservation = new Reservation(customer, service, calendar);
 		
 		try{
-			SalonSvetlio add = new SalonSvetlio();
-			add.addReservation(reservation);
-			System.out.println("you make a reservation!");
+			salonSvetlio.addReservation(reservation);
+			System.out.println("you made a reservation!");
 		}catch(ReservationCollision exc){
 			//6te go dovur6a
 			System.out.println("ima zase4ka na 4asove");
 		}
-		
-		//input.close();
 	}
 	
-	public static void displayReservationForDaysForward(int daysForward){
-		SalonSvetlio add = new SalonSvetlio();
-		LinkedList<Reservation> listForPrint = add.listReservations(daysForward);
-		if(listForPrint==null){
+	private void displayReservationForDaysForward(int daysForward){
+		LinkedList<Reservation> listForPrint = salonSvetlio.listReservations(daysForward);
+		if(listForPrint.isEmpty()){
 			System.out.println();
 			System.out.println("There is no reservation for this period.");
 			return;
@@ -215,7 +187,7 @@ public class ConsoleClient {
 		}
 	}
 	
-	public static void deleteAReservation(){
+	private void deleteAReservation(){
 		int year, month, day;
 		double hourWithMinutes, doubleMinutes;
 		int hour, integerMinutes;
@@ -226,7 +198,6 @@ public class ConsoleClient {
 		year = input.nextInt();
 		if(year != 2013 && year != 2014){
 			System.out.println("you have entered wrong year.");
-			//input.close();
 			return;
 		}
 		
@@ -234,7 +205,6 @@ public class ConsoleClient {
 		month = input.nextInt();
 		if(month<1 || month>12){
 			System.out.println("you have entered invalid month.");
-			//input.close();
 			return;
 		}
 		
@@ -242,7 +212,6 @@ public class ConsoleClient {
 		day = input.nextInt();
 		if(day<1 || day>31){
 			System.out.println("you have entered invalid day.");
-			//input.close();
 			return;
 		}
 		
@@ -252,7 +221,6 @@ public class ConsoleClient {
 		
 		if(hourWithMinutes<0 || hourWithMinutes>24){
 			System.out.println("you have entered invalid hour.");
-			//input.close();
 			return;
 		}
 		
@@ -261,12 +229,20 @@ public class ConsoleClient {
 		integerMinutes = (int)doubleMinutes;
 		
 		Calendar timeForCanceling = new GregorianCalendar(year, month-1, day, hour, integerMinutes);
-		SalonSvetlio rm = new SalonSvetlio();
 		
-		if(rm.removeReservation(timeForCanceling)!= null){
+		if(salonSvetlio.removeReservation(timeForCanceling)!= null){
 			System.out.println("you have cancle this reservation");
 		}
-		//input.close();
+	}
+	
+	private Service getServiceInstance(int serviceTypeChoice){
+		switch(serviceTypeChoice){
+		case 1: return new ManHairCut();
+		
+		case 2: return new WomanHairCut();
+		
+		default: return null;
+		}
 	}
 
 }

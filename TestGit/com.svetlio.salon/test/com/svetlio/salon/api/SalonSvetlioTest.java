@@ -27,7 +27,7 @@ public class SalonSvetlioTest {
 	public static void createObject(){
 		ss = new SalonSvetlio();
 		
-		Calendar cal = new GregorianCalendar(2013, 3, 26, 13 , 15);
+		Calendar cal = new GregorianCalendar(2013, 4, 7, 13 , 15);
 		Customer customer = new Customer("Svetlio", "Ivanov", 9206666);
 		Service service = new ManHairCut();
 	    r = new Reservation(customer, service, cal );
@@ -38,12 +38,12 @@ public class SalonSvetlioTest {
 		
 		
 		ss.addReservation(r);
-		Assert.assertEquals(r, ss.list.getFirst());
+		Assert.assertEquals(r, ss.getList().getFirst());
 	}
 	
 	@Test(expected = ReservationCollision.class)
 	public void testAddReservationExc() throws ReservationCollision{
-		Calendar cal = new GregorianCalendar(2013, 3, 26, 13 , 20);
+		Calendar cal = new GregorianCalendar(2013, 4, 7, 13 , 20);
 		Customer customer = new Customer("Rosi", "Ivanov", 9206666);
 		Service service = new ManHairCut();
 		Reservation r = new Reservation(customer, service, cal );
@@ -53,30 +53,28 @@ public class SalonSvetlioTest {
 
 	@Test
 	public void testRemoveReservation() {
-		Calendar cal = new GregorianCalendar(2013, 3, 26, 13 , 15);
+		Calendar cal = new GregorianCalendar(2013, 4, 7, 13 , 15);
 		
 		Assert.assertEquals(r, ss.removeReservation(cal));
-		Assert.assertTrue(ss.list.isEmpty());
+		Assert.assertTrue(ss.getList().isEmpty());
 	}
 
 	
 	@Test
 	public void testListReservation() throws ReservationCollision{
-		Calendar cal1 = new GregorianCalendar(2013, 3, 26, 13 , 15);
-		Customer customer1 = new Customer("Svetlio", "Ivanov", 9206666);
-		Service service1 = new ManHairCut();
-	    Reservation r1 = new Reservation(customer1, service1, cal1 );
-	    ss.addReservation(r1);
+		
+	    ss.addReservation(r);
 	    
-	    Calendar cal2 = new GregorianCalendar(2013, 3, 29, 17 , 20);
+	    Calendar cal2 = new GregorianCalendar(2013, 4, 8, 17 , 15);
 		Customer customer2 = new Customer("Rosi", "Ivanov", 9206666);
 		Service service2 = new ManHairCut();
 		Reservation r2 = new Reservation(customer2, service2, cal2 );
 		ss.addReservation(r2);
 		
-		Assert.assertEquals(r1, ss.listReservations(0).getFirst());
 		
-		Assert.assertEquals(r1, ss.listReservations(3).getFirst());
+		Assert.assertEquals(r, ss.listReservations(0).getFirst());
+		
+		Assert.assertEquals(r, ss.listReservations(3).getFirst());
 		Assert.assertEquals(r2, ss.listReservations(3).getLast());
 	    
 	}
