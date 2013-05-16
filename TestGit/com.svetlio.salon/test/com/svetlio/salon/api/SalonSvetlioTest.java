@@ -4,6 +4,7 @@ import static org.junit.Assert.*;
 
 import java.util.Calendar;
 import java.util.GregorianCalendar;
+import java.util.LinkedList;
 
 import org.junit.Assert;
 import org.junit.BeforeClass;
@@ -72,10 +73,10 @@ public class SalonSvetlioTest {
 		ss.addReservation(r2);
 		
 		
-		Assert.assertEquals(r, ss.listReservations(0).getFirst());
+		Assert.assertEquals(r, ((LinkedList<Reservation>) ss.listReservations(0)).getFirst());
 		
-		Assert.assertEquals(r, ss.listReservations(3).getFirst());
-		Assert.assertEquals(r2, ss.listReservations(3).getLast());
+		Assert.assertEquals(r, ((LinkedList<Reservation>) ss.listReservations(3)).getFirst());
+		Assert.assertEquals(r2, ((LinkedList<Reservation>) ss.listReservations(3)).getLast());
 	    
 	}
 

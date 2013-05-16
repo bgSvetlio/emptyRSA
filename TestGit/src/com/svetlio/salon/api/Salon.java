@@ -1,7 +1,9 @@
 package com.svetlio.salon.api;
 
 import java.util.Calendar;
-import java.util.LinkedList;
+
+
+import java.util.List;
 
 
 
@@ -14,5 +16,5 @@ public interface Salon {
 	
 	public Reservation removeReservation(Calendar reservationDate);
 	
-	public LinkedList<Reservation> listReservations(int daysForward);
+	public List<Reservation> listReservations(int daysForward);
 }

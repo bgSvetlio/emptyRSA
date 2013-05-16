@@ -1,10 +1,13 @@
 package com.svetlio.salon.api;
 
-import java.util.Calendar;  
+import java.util.Calendar;
+
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
+import java.util.List;
 
-
+import com.svetlio.salon.database.JDBCreservationsDAOimpl;
+import com.svetlio.salon.database.SalonReservationDAO;
 import com.svetlio.salon.exceptions.ReservationCollision;
 import com.svetlio.salon.model.Reservation;
 
@@ -62,7 +65,7 @@ public class SalonSvetlio implements Salon {
 	}
 
 	@Override
-	public LinkedList<Reservation> listReservations(int daysForward) {
+	public List<Reservation> listReservations(int daysForward) {
 		// TODO Auto-generated method stub
 		Calendar dateToday = new GregorianCalendar();
 		
@@ -79,7 +82,9 @@ public class SalonSvetlio implements Salon {
 			}
 		}
 		
-		return listForPrint;
+		//SalonReservationDAO salonReservationDAO = new JDBCreservationsDAOimpl();
+		
+		return listForPrint;//salonReservationDAO.selectReservationsFromDB();
 	}
 	
 	private boolean collisionReservation(Reservation reservation){

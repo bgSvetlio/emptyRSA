@@ -3,6 +3,7 @@ package com.svetlio.salon.console;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Scanner;
 
 
@@ -13,6 +14,7 @@ import com.svetlio.salon.model.Customer;
 import com.svetlio.salon.model.ManHairCut;
 import com.svetlio.salon.model.Reservation;
 import com.svetlio.salon.model.Service;
+import com.svetlio.salon.model.ServiceFactory;
 import com.svetlio.salon.model.WomanHairCut;
 
 
@@ -132,11 +134,11 @@ public class ConsoleClient {
 		serviceTypeChoice = input.nextInt();
 		
 
-		if(getServiceInstance(serviceTypeChoice)== null){
+		if(ServiceFactory.getServiceInstance(serviceTypeChoice)== null){
 			System.out.println("You have entered non-existing service");
 			return;
 		}else{
-			service = getServiceInstance(serviceTypeChoice);
+			service = ServiceFactory.getServiceInstance(serviceTypeChoice);
 		}
 		
 		System.out.println();
@@ -165,10 +167,11 @@ public class ConsoleClient {
 			//6te go dovur6a
 			System.out.println("ima zase4ka na 4asove");
 		}
+		
 	}
 	
 	private void displayReservationForDaysForward(int daysForward){
-		LinkedList<Reservation> listForPrint = salonSvetlio.listReservations(daysForward);
+		List<Reservation> listForPrint = salonSvetlio.listReservations(daysForward);
 		if(listForPrint.isEmpty()){
 			System.out.println();
 			System.out.println("There is no reservation for this period.");
@@ -235,14 +238,5 @@ public class ConsoleClient {
 		}
 	}
 	
-	private Service getServiceInstance(int serviceTypeChoice){
-		switch(serviceTypeChoice){
-		case 1: return new ManHairCut();
-		
-		case 2: return new WomanHairCut();
-		
-		default: return null;
-		}
-	}
 
 }
