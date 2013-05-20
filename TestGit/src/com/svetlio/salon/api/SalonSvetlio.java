@@ -2,6 +2,8 @@ package com.svetlio.salon.api;
 
 import java.util.Calendar;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
@@ -9,7 +11,10 @@ import java.util.List;
 import com.svetlio.salon.database.JDBCreservationsDAOimpl;
 import com.svetlio.salon.database.SalonReservationDAO;
 import com.svetlio.salon.exceptions.ReservationCollision;
+import com.svetlio.salon.model.Customer;
+import com.svetlio.salon.model.ManHairCut;
 import com.svetlio.salon.model.Reservation;
+import com.svetlio.salon.model.Service;
 
 
 public class SalonSvetlio implements Salon {
@@ -23,56 +28,38 @@ public class SalonSvetlio implements Salon {
 
 	@Override
 	public void addReservation(Reservation reservation) throws ReservationCollision {
-		int count = 0;
+		
+		JDBCreservationsDAOimpl save = new JDBCreservationsDAOimpl();
+		
 
 		
 		if(collisionReservation(reservation)){
 			throw new ReservationCollision(reservation.getCalendar());
 		}
 
-		if(list.isEmpty()){
-			list.add(reservation);
-		} else{
-			for(Reservation temp: list){
-				if(reservation.getCalendar().getTime().before(temp.getCalendar().getTime())){
-					list.add(count, reservation);
-					break;
-				}
-				if(count==list.size()-1){
-					
-					list.addLast(reservation);
-					break;
-				}
-				count++;
-			}
-		}
+		save.saveReservationInDB(reservation);
 		
 
 	}
 
 	@Override
 	public Reservation removeReservation(Calendar reservationDate) {
-		for(Reservation temp: list){
-			if(reservationDate.compareTo(temp.getCalendar())==0){
-				
-				list.remove(temp);
-				return temp;
-			}
-					
-		}
-		// TODO Auto-generated method stub
-		return null;
+		SalonReservationDAO remove = new JDBCreservationsDAOimpl();
+		Reservation reservation = remove.deleteReservationFromDB(reservationDate);
+		
+		return reservation;
 	}
 
 	@Override
 	public List<Reservation> listReservations(int daysForward) {
 		// TODO Auto-generated method stub
 		Calendar dateToday = new GregorianCalendar();
-		
+		SalonReservationDAO salonReservationDAO = new JDBCreservationsDAOimpl();
 		LinkedList<Reservation> listForPrint= new LinkedList<Reservation>();
+		List<Reservation> listFromDB= salonReservationDAO.selectReservationsFromDB();
 		
 		for(int i=0;i<=daysForward;i++){
-			for(Reservation temp: this.list){
+			for(Reservation temp: listFromDB){
 				if(temp.getCalendar().get(GregorianCalendar.YEAR)== dateToday.get(GregorianCalendar.YEAR) &&
 					temp.getCalendar().get(GregorianCalendar.MONTH)== dateToday.get(GregorianCalendar.MONTH) &&
 					temp.getCalendar().get(GregorianCalendar.DAY_OF_MONTH)== dateToday.get(GregorianCalendar.DAY_OF_MONTH)+i){
@@ -81,14 +68,23 @@ public class SalonSvetlio implements Salon {
 				}
 			}
 		}
+		Collections.sort(listForPrint , new Comparator<Reservation>() {
+
+			@Override
+			public int compare(Reservation arg0, Reservation arg1) {
+				// TODO Auto-generated method stub
+				return arg0.getCalendar().compareTo(arg1.getCalendar());
+			}   
+			});
 		
-		//SalonReservationDAO salonReservationDAO = new JDBCreservationsDAOimpl();
-		
-		return listForPrint;//salonReservationDAO.selectReservationsFromDB();
+		return listForPrint;
 	}
 	
 	private boolean collisionReservation(Reservation reservation){
-		for(Reservation temp: list){
+		JDBCreservationsDAOimpl collision = new JDBCreservationsDAOimpl();
+		List<Reservation> listFromDB = collision.selectReservationsFromDB();
+		
+		for(Reservation temp: listFromDB){
 			Calendar tempCalBefor = new GregorianCalendar(temp.getCalendar().get(GregorianCalendar.YEAR), 
 					temp.getCalendar().get(GregorianCalendar.MONTH), temp.getCalendar().get(GregorianCalendar.DAY_OF_MONTH), 
 					temp.getCalendar().get(GregorianCalendar.HOUR_OF_DAY), 

@@ -171,12 +171,15 @@ public class ConsoleClient {
 	}
 	
 	private void displayReservationForDaysForward(int daysForward){
+		
 		List<Reservation> listForPrint = salonSvetlio.listReservations(daysForward);
+		
 		if(listForPrint.isEmpty()){
 			System.out.println();
 			System.out.println("There is no reservation for this period.");
 			return;
 		}
+		
 		
 		for(Reservation temp: listForPrint){
 			System.out.println();
@@ -235,6 +238,8 @@ public class ConsoleClient {
 		
 		if(salonSvetlio.removeReservation(timeForCanceling)!= null){
 			System.out.println("you have cancle this reservation");
+		}else {
+			System.out.println("There is no reservation with such date!");
 		}
 	}
 	

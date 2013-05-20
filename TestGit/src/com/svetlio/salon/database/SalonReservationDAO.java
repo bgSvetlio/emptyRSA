@@ -7,7 +7,7 @@ import com.svetlio.salon.model.Reservation;
 
 public interface SalonReservationDAO {
 	public boolean saveReservationInDB(Reservation reservation);
-	public boolean deleteReservationFromDB(Calendar calandar);
+	public Reservation deleteReservationFromDB(Calendar calandar);
 	public List<Reservation> selectReservationsFromDB();
 
 }
