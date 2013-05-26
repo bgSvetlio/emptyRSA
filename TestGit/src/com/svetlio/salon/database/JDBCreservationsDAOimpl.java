@@ -17,12 +17,18 @@ import com.svetlio.salon.model.Service;
 import com.svetlio.salon.model.ServiceFactory;
 
 public class JDBCreservationsDAOimpl implements SalonReservationDAO {
+	
+	/* Zashto poletata ne sa private? Na nqkogo trqbva li mu paketno nivo na dostup ? */
 	Connection conn = null;
     PreparedStatement prestat = null;
     Statement stat = null;
     ResultSet pw = null;
 	
 	public JDBCreservationsDAOimpl(){
+		
+		/* Pomisli kakvo shte stane ako reshim da poznavame druga baza i syotvetno drug provider na konekcii. Kakuv bi bil uda4niq podhod
+		 * za da ne se promeni koda na DAO-to
+		 */
 		try {
             Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
         } catch (InstantiationException e) {
@@ -32,7 +38,9 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-		
+		/*
+		 * Ne moje connection-a da se inicializira samo vednuj kakvo 6te stane ako viknesh dva puti podred method na DAO-to... Mai ne si go testval
+		 */
 		try {
 			conn = DriverManager.getConnection("jdbc:derby://localhost:1527/SvetlioSalonReservations;user=APP;password=user");
 		} catch (SQLException e) {
@@ -44,6 +52,9 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 	@Override
 	public boolean saveReservationInDB(Reservation reservation) {
 		
+		/*
+		 * Tuk user input-a se save-a direktno kakvo shte se slu4i ako nqkoi se opita da priloji SQL injection
+		 */
 		String addStrRes = "INSERT INTO reservations (reservationTime, serviceType) VALUES ("+
 				fromCalToTimeStamp(reservation.getCalendar())+ ", \'" +reservation.getService()+"\')";
 		
@@ -162,7 +173,7 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
             }
             
             
-             
+            //Zashto gi close-vash po 2 puti ? Finnaly bloka koga shte se izpulni ?
             pw.close();
             pw = null;
           

@@ -21,6 +21,11 @@ import com.svetlio.salon.model.Service;
  */
 
 public class SalonSvetlioTest {
+	
+	/*
+	 * Zashto stati4ni ?? Ne e zaduljitelno da sa v BeforeClass moje samo v Before
+	 * i pak sa bez private modifier - za6to ?
+	 */
 	static SalonSvetlio ss;
 	static Reservation r;
 	
@@ -37,8 +42,12 @@ public class SalonSvetlioTest {
 	@Test
 	public void testAddReservation() throws ReservationCollision {
 		
-		
 		ss.addReservation(r);
+		/*
+		 * Nqma zashto da pravish getList() metod imash metod koito gi listva i shte vidish 4e nqma nikakvi.
+		 * Tova e grubo narushenie na enkapsulaciqta. Ako trqbva da napravim nov metod v inteface-a
+		 * koito listva absolutno vsi4ki rezervacii ...
+		 */
 		Assert.assertEquals(r, ss.getList().getFirst());
 	}
 	

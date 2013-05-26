@@ -16,12 +16,22 @@ import com.svetlio.salon.model.ManHairCut;
 import com.svetlio.salon.model.Reservation;
 import com.svetlio.salon.model.Service;
 
-
+/*
+ * Purvo kade sa testovete ! Tova e nai-vajnoto ne6to, koeto o4akvax ... Zatova sega nqma da komentiram klasa
+ * a o4akvam sam da se dosetish kade sa problemite kogato trugnesh da pishesh testovete i vidish 4e ne se polu4ava...#
+ * Ne slu4aino definiraxme purvo inteface-a na DAO-to za6toto toi beshe predostatu4en da si napishesh pravilnite testove.
+ */
 public class SalonSvetlio implements Salon {
 	
 	
 	private LinkedList<Reservation> list= new LinkedList<Reservation>();
 	
+	/*
+	 * Tozi method e absolutno nenujen. Taka si razbivash encapsulation-a
+	 * Zashto davash internal strukturata si za polzvame ? Ottuk natatuk v toq
+	 * klas vseki moje da si dobavq kakvoto si iska ! Ako e za testovete
+	 * ti si imash metod koito moje da listva rezervaciite i da se ubedish 4e nqma nikakvi.
+	 */
 	public LinkedList<Reservation> getList(){
 		return this.list;
 	}
