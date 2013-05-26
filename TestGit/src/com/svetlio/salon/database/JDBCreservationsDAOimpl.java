@@ -39,7 +39,10 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
             e.printStackTrace();
         }
 		/*
-		 * Ne moje connection-a da se inicializira samo vednuj kakvo 6te stane ako viknesh dva puti podred method na DAO-to... Mai ne si go testval
+		 * Ne moje connection-a da se inicializira samo vednuj kakvo 6te stane ako viknesh dva puti podred method na DAO-to... Mai ne si go testval.
+		 * Korekciq: Na teb ti raboti 6toto struktukrata na programata ti e takava. Ideqta na DAO-to ne e da se polzva samo za edno izvikvane
+		 * na metod, a da si raboti za vsqka zaqvka kum salona. 
+		 * 
 		 */
 		try {
 			conn = DriverManager.getConnection("jdbc:derby://localhost:1527/SvetlioSalonReservations;user=APP;password=user");
