@@ -22,19 +22,6 @@ import com.svetlio.salon.model.Service;
  * Ne slu4aino definiraxme purvo inteface-a na DAO-to za6toto toi beshe predostatu4en da si napishesh pravilnite testove.
  */
 public class SalonSvetlio implements Salon {
-	
-	
-	private LinkedList<Reservation> list= new LinkedList<Reservation>();
-	
-	/*
-	 * Tozi method e absolutno nenujen. Taka si razbivash encapsulation-a
-	 * Zashto davash internal strukturata si za polzvame ? Ottuk natatuk v toq
-	 * klas vseki moje da si dobavq kakvoto si iska ! Ako e za testovete
-	 * ti si imash metod koito moje da listva rezervaciite i da se ubedish 4e nqma nikakvi.
-	 */
-	public LinkedList<Reservation> getList(){
-		return this.list;
-	}
 
 	@Override
 	public void addReservation(Reservation reservation) throws ReservationCollision {

@@ -1,6 +1,7 @@
 package com.svetlio.salon.database;
 
 import java.sql.Connection;
+
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -11,6 +12,8 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
+import com.svetlio.salon.databasesConnection.Database;
+import com.svetlio.salon.databasesConnection.DerbyDBConnect;
 import com.svetlio.salon.model.Customer;
 import com.svetlio.salon.model.Reservation;
 import com.svetlio.salon.model.Service;
@@ -18,19 +21,18 @@ import com.svetlio.salon.model.ServiceFactory;
 
 public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 	
-	/* Zashto poletata ne sa private? Na nqkogo trqbva li mu paketno nivo na dostup ? */
-	Connection conn = null;
-    PreparedStatement prestat = null;
-    Statement stat = null;
-    ResultSet pw = null;
+	
+	private Connection conn = null;
+    private PreparedStatement prestat = null;
+    private Statement stat = null;
+    private ResultSet pw = null;
+    private Database dbConn;
 	
 	public JDBCreservationsDAOimpl(){
+		dbConn = new DerbyDBConnect();
 		
-		/* Pomisli kakvo shte stane ako reshim da poznavame druga baza i syotvetno drug provider na konekcii. Kakuv bi bil uda4niq podhod
-		 * za da ne se promeni koda na DAO-to
-		 */
 		try {
-            Class.forName("org.apache.derby.jdbc.ClientDriver").newInstance();
+            Class.forName(dbConn.getClientDriver()).newInstance();
         } catch (InstantiationException e) {
             e.printStackTrace();
         } catch (IllegalAccessException e) {
@@ -38,23 +40,12 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
         } catch (ClassNotFoundException e) {
             e.printStackTrace();
         }
-		/*
-		 * Ne moje connection-a da se inicializira samo vednuj kakvo 6te stane ako viknesh dva puti podred method na DAO-to... Mai ne si go testval.
-		 * Korekciq: Na teb ti raboti 6toto struktukrata na programata ti e takava. Ideqta na DAO-to ne e da se polzva samo za edno izvikvane
-		 * na metod, a da si raboti za vsqka zaqvka kum salona. 
-		 * 
-		 */
-		try {
-			conn = DriverManager.getConnection("jdbc:derby://localhost:1527/SvetlioSalonReservations;user=APP;password=user");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 	}
 
 	@Override
 	public boolean saveReservationInDB(Reservation reservation) {
-		
+		createConnection(dbConn.getUser(), dbConn.getPassword());
 		/*
 		 * Tuk user input-a se save-a direktno kakvo shte se slu4i ako nqkoi se opita da priloji SQL injection
 		 */
@@ -72,10 +63,7 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 			int a = stat.executeUpdate(addStrRes);
 			
 			int b = stat.executeUpdate(addStrCus);
-			stat.close();
-            stat = null;
-            conn.close();
-            conn = null;
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -83,7 +71,7 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 		finally{
             if (stat != null){
                 try { stat.close();} catch (SQLException e){;}
-                prestat = null;
+                stat = null;
             }
             if (conn != null){
                 try {conn.close();} catch(SQLException e) {;}
@@ -97,6 +85,7 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 
 	@Override
 	public Reservation deleteReservationFromDB(Calendar calendar) {
+		createConnection(dbConn.getUser(), dbConn.getPassword());
 		// TODO Auto-generated method stub
 		Reservation reservation = null;
 		String delStr = "DELETE FROM reservationS WHERE reservationTime = "+ fromCalToTimeStamp(calendar);
@@ -122,14 +111,7 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 			stat = conn.createStatement(); 
 			int a = stat.executeUpdate(delStr);
 			
-			pw.close();
-	        pw = null;
-			stat.close();
-            stat = null;
-            prestat.close();
-            prestat = null;
-            conn.close();
-            conn = null;
+
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -143,6 +125,10 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
                 try { stat.close();} catch (SQLException e){;}
                 stat = null;
             }
+            if (prestat != null){
+                try { prestat.close();} catch (SQLException e){;}
+                prestat = null;
+            }
             if (conn != null){
                 try {conn.close();} catch(SQLException e) {;}
             conn = null;
@@ -155,6 +141,7 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 
 	@Override
 	public List<Reservation> selectReservationsFromDB() {
+		createConnection(dbConn.getUser(), dbConn.getPassword());
 		// TODO Auto-generated method stub
 		LinkedList<Reservation> list = new LinkedList<Reservation>();
 		try {
@@ -174,16 +161,6 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
                 Reservation reservation = new Reservation(customer, service, calendar);
                 list.add(reservation);
             }
-            
-            
-            //Zashto gi close-vash po 2 puti ? Finnaly bloka koga shte se izpulni ?
-            pw.close();
-            pw = null;
-          
-            prestat.close();
-            prestat = null;
-            conn.close();
-            conn = null;
  
         } catch (SQLException e) {
             e.printStackTrace();
@@ -221,6 +198,15 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 				+minutes+":00\'";
 		
 		return timeStamp;
+	}
+	
+	private void createConnection(String userName, String password){
+		try {
+			conn = DriverManager.getConnection(dbConn.getConnection(), userName, password);
+		} catch (SQLException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 }

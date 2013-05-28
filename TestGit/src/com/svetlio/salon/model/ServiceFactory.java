@@ -9,6 +9,20 @@ public class ServiceFactory {
 	 * metodite vinagi vru6tat instanciq na nov obekt. Da se kazvat 'createXXX'.
 	 */
 	
+	private static ServiceFactory instance;
+	
+	static { 
+		instance = new ServiceFactory();
+	}
+	
+	private ServiceFactory(){
+		
+	}
+	
+	public static ServiceFactory getServiceFactory(){
+		return instance;
+	}
+	
 	public static Service getServiceInstance(int serviceTypeChoice){
 		switch(serviceTypeChoice){
 		case 1: return new ManHairCut();
