@@ -161,8 +161,11 @@ public class ConsoleClient {
 		Reservation reservation = new Reservation(customer, service, calendar);
 		
 		try{
-			salonSvetlio.addReservation(reservation);
-			System.out.println("you made a reservation!");
+			if(salonSvetlio.addReservation(reservation)){
+				System.out.println("you made a reservation!");
+			}else{
+				System.out.println("you failed to make a reservation!");
+			}
 		}catch(ReservationCollision exc){
 			//6te go dovur6a
 			System.out.println("ima zase4ka na 4asove");

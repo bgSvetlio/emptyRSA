@@ -16,33 +16,33 @@ import com.svetlio.salon.model.ManHairCut;
 import com.svetlio.salon.model.Reservation;
 import com.svetlio.salon.model.Service;
 
-/*
- * Purvo kade sa testovete ! Tova e nai-vajnoto ne6to, koeto o4akvax ... Zatova sega nqma da komentiram klasa
- * a o4akvam sam da se dosetish kade sa problemite kogato trugnesh da pishesh testovete i vidish 4e ne se polu4ava...#
- * Ne slu4aino definiraxme purvo inteface-a na DAO-to za6toto toi beshe predostatu4en da si napishesh pravilnite testove.
- */
+
 public class SalonSvetlio implements Salon {
+	private SalonReservationDAO salonResrvationDAO = new JDBCreservationsDAOimpl();
+	
+	@Override
+	public void setDataAccess(SalonReservationDAO salonReservationDAO){
+		this.salonResrvationDAO = salonReservationDAO;
+	}
 
 	@Override
-	public void addReservation(Reservation reservation) throws ReservationCollision {
-		
-		JDBCreservationsDAOimpl save = new JDBCreservationsDAOimpl();
-		
-
+	public boolean addReservation(Reservation reservation) throws ReservationCollision {
 		
 		if(collisionReservation(reservation)){
 			throw new ReservationCollision(reservation.getCalendar());
 		}
 
-		save.saveReservationInDB(reservation);
-		
+		if(salonResrvationDAO.saveReservationInDB(reservation)){
+			return true;
+		}
+		else return false;
 
 	}
 
 	@Override
 	public Reservation removeReservation(Calendar reservationDate) {
-		SalonReservationDAO remove = new JDBCreservationsDAOimpl();
-		Reservation reservation = remove.deleteReservationFromDB(reservationDate);
+
+		Reservation reservation = salonResrvationDAO.deleteReservationFromDB(reservationDate);
 		
 		return reservation;
 	}
@@ -51,9 +51,8 @@ public class SalonSvetlio implements Salon {
 	public List<Reservation> listReservations(int daysForward) {
 		// TODO Auto-generated method stub
 		Calendar dateToday = new GregorianCalendar();
-		SalonReservationDAO salonReservationDAO = new JDBCreservationsDAOimpl();
 		LinkedList<Reservation> listForPrint= new LinkedList<Reservation>();
-		List<Reservation> listFromDB= salonReservationDAO.selectReservationsFromDB();
+		List<Reservation> listFromDB= salonResrvationDAO.selectReservationsFromDB();
 		
 		for(int i=0;i<=daysForward;i++){
 			for(Reservation temp: listFromDB){
@@ -78,21 +77,23 @@ public class SalonSvetlio implements Salon {
 	}
 	
 	private boolean collisionReservation(Reservation reservation){
-		JDBCreservationsDAOimpl collision = new JDBCreservationsDAOimpl();
-		List<Reservation> listFromDB = collision.selectReservationsFromDB();
+
+		List<Reservation> listFromDB = salonResrvationDAO.selectReservationsFromDB();
 		
-		for(Reservation temp: listFromDB){
-			Calendar tempCalBefor = new GregorianCalendar(temp.getCalendar().get(GregorianCalendar.YEAR), 
-					temp.getCalendar().get(GregorianCalendar.MONTH), temp.getCalendar().get(GregorianCalendar.DAY_OF_MONTH), 
-					temp.getCalendar().get(GregorianCalendar.HOUR_OF_DAY), 
-					temp.getCalendar().get(GregorianCalendar.MINUTE)- reservation.getService().getDurationInMinutes());
-			Calendar tempCalAfter = new GregorianCalendar(temp.getCalendar().get(GregorianCalendar.YEAR), 
-					temp.getCalendar().get(GregorianCalendar.MONTH), temp.getCalendar().get(GregorianCalendar.DAY_OF_MONTH), 
-					temp.getCalendar().get(GregorianCalendar.HOUR_OF_DAY), 
-					temp.getCalendar().get(GregorianCalendar.MINUTE)+ temp.getService().getDurationInMinutes());
-			
-			if(reservation.getCalendar().after(tempCalBefor) && reservation.getCalendar().before(tempCalAfter)){
-				return true;
+		if(!listFromDB.isEmpty()){
+			for(Reservation temp: listFromDB){
+				Calendar tempCalBefor = new GregorianCalendar(temp.getCalendar().get(GregorianCalendar.YEAR), 
+						temp.getCalendar().get(GregorianCalendar.MONTH), temp.getCalendar().get(GregorianCalendar.DAY_OF_MONTH), 
+						temp.getCalendar().get(GregorianCalendar.HOUR_OF_DAY), 
+						temp.getCalendar().get(GregorianCalendar.MINUTE)- reservation.getService().getDurationInMinutes());
+				Calendar tempCalAfter = new GregorianCalendar(temp.getCalendar().get(GregorianCalendar.YEAR), 
+						temp.getCalendar().get(GregorianCalendar.MONTH), temp.getCalendar().get(GregorianCalendar.DAY_OF_MONTH), 
+						temp.getCalendar().get(GregorianCalendar.HOUR_OF_DAY), 
+						temp.getCalendar().get(GregorianCalendar.MINUTE)+ temp.getService().getDurationInMinutes());
+				
+				if(reservation.getCalendar().after(tempCalBefor) && reservation.getCalendar().before(tempCalAfter)){
+					return true;
+				}
 			}
 		}
 		return false;

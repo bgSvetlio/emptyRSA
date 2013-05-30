@@ -7,12 +7,14 @@ import java.util.List;
 
 
 
+import com.svetlio.salon.database.SalonReservationDAO;
 import com.svetlio.salon.exceptions.ReservationCollision;
 import com.svetlio.salon.model.Reservation;
 
 public interface Salon {
+	public void setDataAccess(SalonReservationDAO salonReservationDAO);
 
-	public void addReservation(Reservation reservation) throws ReservationCollision;
+	public boolean addReservation(Reservation reservation) throws ReservationCollision;
 	
 	public Reservation removeReservation(Calendar reservationDate);
 	
