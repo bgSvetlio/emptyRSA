@@ -1,5 +1,6 @@
 package com.svetlio.salon.console;
 
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -20,7 +21,7 @@ import com.svetlio.salon.model.WomanHairCut;
 
 public class ConsoleClient {
 	
-	Salon salonSvetlio;
+	private Salon salonSvetlio;
 	
 	public ConsoleClient(Salon salonSvetlio){
 		this.salonSvetlio = salonSvetlio;
@@ -65,7 +66,8 @@ public class ConsoleClient {
 	
 	private void addReservation(){
 		String firstName,lastName;
-		long telephoneNumber;
+		long telephoneNumber=0L;
+		String telNumberStr;
 		int year,month,day;
 		double hourWithMinutes, doubleMinutes;
 		int hour, integerMinutes;
@@ -81,7 +83,15 @@ public class ConsoleClient {
 		lastName = input.nextLine();
 		
 		System.out.println("Enter your telephone number:");
-		telephoneNumber = input.nextLong();
+		telNumberStr = input.nextLine();
+		Scanner scanner = new Scanner(telNumberStr);
+		if(scanner.hasNextLong()){
+			telephoneNumber = scanner.nextLong();
+		}else{
+			System.out.println("You have entered invalid telephone number");
+			return;
+		}
+		
 		System.out.println();
 		
 		Customer customer = new Customer(firstName, lastName, telephoneNumber);
@@ -164,11 +174,22 @@ public class ConsoleClient {
 			if(salonSvetlio.addReservation(reservation)){
 				System.out.println("you made a reservation!");
 			}else{
-				System.out.println("you failed to make a reservation!");
+				System.out.println("You failed to make a reservation!");
 			}
 		}catch(ReservationCollision exc){
 			//6te go dovur6a
-			System.out.println("ima zase4ka na 4asove");
+			System.out.println("There is a duplication of reservation hours.");
+			System.out.println("you can make a reservation:");
+			List<Double> reservationForThisDay = exc.listFreeHourForTheDay();
+			
+			for(int i=0;i< reservationForThisDay.size();i++){
+				System.out.printf("From: %.2f",reservationForThisDay.get(i));
+				i++;
+				System.out.printf("   To: %.2f",reservationForThisDay.get(i));
+				System.out.println();
+			}
+			System.out.println("this day.");
+			System.out.println("Please try again.");
 		}
 		
 	}

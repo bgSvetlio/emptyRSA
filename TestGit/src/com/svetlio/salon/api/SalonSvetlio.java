@@ -29,7 +29,7 @@ public class SalonSvetlio implements Salon {
 	public boolean addReservation(Reservation reservation) throws ReservationCollision {
 		
 		if(collisionReservation(reservation)){
-			throw new ReservationCollision(reservation.getCalendar());
+			throw new ReservationCollision(reservation);
 		}
 
 		if(salonResrvationDAO.saveReservationInDB(reservation)){
