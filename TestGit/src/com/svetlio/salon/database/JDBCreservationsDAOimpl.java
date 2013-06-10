@@ -1,12 +1,10 @@
 package com.svetlio.salon.database;
 
-import java.sql.Connection; 
+import java.sql.Connection;  
 
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Calendar;
 import java.util.GregorianCalendar;
@@ -14,8 +12,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.svetlio.salon.databasesConnection.ConnectionProvider;
-import com.svetlio.salon.databasesConnection.Database;
-import com.svetlio.salon.databasesConnection.DerbyDBConnect;
 import com.svetlio.salon.model.Customer;
 import com.svetlio.salon.model.Reservation;
 import com.svetlio.salon.model.Service;
@@ -24,27 +20,9 @@ import com.svetlio.salon.model.ServiceFactory;
 public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 	
 	private ConnectionProvider connectionProvider;
-	//private Connection conn = null;
-   // private PreparedStatement prestat = null;
-   // private Statement stat = null;
-    //private ResultSet pw = null;
-    //private Database dbConn;
 	
 	public JDBCreservationsDAOimpl(ConnectionProvider connectionProvider){
-		//dbConn = new DerbyDBConnect();
 		this.connectionProvider = connectionProvider;
-		
-//		
-//		try {
-//            Class.forName(dbConn.getClientDriver()).newInstance();
-//        } catch (InstantiationException e) {
-//            e.printStackTrace();
-//        } catch (IllegalAccessException e) {
-//            e.printStackTrace();
-//        } catch (ClassNotFoundException e) {
-//            e.printStackTrace();
-//        }
-		
 	}
 
 	@Override
@@ -52,13 +30,8 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 		int a=0,b=0;
 		Timestamp timeStamp=  fromCalendar2Timestamp(reservation.getCalendar());
 		Connection connection = connectionProvider.getConnection();
-		//createConnection();
-		/*
-		 * Tuk user input-a se save-a direktno kakvo shte se slu4i ako nqkoi se opita da priloji SQL injection
-		 */
 		PreparedStatement preparedStatementReservation= null;
 		PreparedStatement preparedStatementCustomers= null;
-		//ResultSet pw = null;
 		
 		String addStrRes = "INSERT INTO reservations (reservationTime, serviceType) VALUES (?, ?)";
 		String addStrCus = "INSERT INTO customers (firstName, lastName, telephoneNumber) VALUES (?, ?, ?)";
@@ -78,7 +51,6 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 			
 			
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}finally{
 			if (preparedStatementReservation != null){
@@ -94,37 +66,7 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
             connection = null;
             }
 		}
-		/*String addStrRes = "INSERT INTO reservations (reservationTime, serviceType) VALUES ("+
-				fromCalToTimeStamp(reservation.getCalendar())+ ", \'" +reservation.getService()+"\')";
 		
-		String addStrCus = "INSERT INTO customers (firstName, lastName, telephoneNumber) VALUES (\'"
-		+ reservation.getCustomer().getFirstName() +"\', \'"+
-				reservation.getCustomer().getLastName()+ "\', "+ reservation.getCustomer().getPhoneNumber() +")";
-		
-		
-		try {
-			stat = connection.createStatement(); 
-			
-			int a = stat.executeUpdate(addStrRes);
-			
-			int b = stat.executeUpdate(addStrCus);
-
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		finally{
-            if (stat != null){
-                try { stat.close();} catch (SQLException e){;}
-                stat = null;
-            }
-            if (connection != null){
-                try {connection.close();} catch(SQLException e) {;}
-            connection = null;
-            }
-        }*/
-		
-		// TODO Auto-generated method stub
 		if(a==1&&b==1){
 			return true;
 		}else return false;
@@ -137,11 +79,9 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 		PreparedStatement prestatGetBeforeDel = null;
 		PreparedStatement preparedStatementDel = null;
 		ResultSet pw = null;
-		//Timestamp timestamp=null;
-		//createConnection();
-		// TODO Auto-generated method stub
 		Reservation reservation = null;
-		String delStr = "DELETE FROM reservationS WHERE reservationTime = ?";//+ fromCalToTimeStamp(calendar);
+		
+		String delStr = "DELETE FROM reservationS WHERE reservationTime = ?";
 		
 		try {
 			prestatGetBeforeDel = connection.prepareStatement("SELECT customers.firstName , customers.lastName," +
@@ -163,12 +103,8 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 			preparedStatementDel = connection.prepareStatement(delStr);
 			preparedStatementDel.setTimestamp(1, fromCalendar2Timestamp(calendar));
 			preparedStatementDel.executeUpdate();
-//			stat = connection.createStatement(); 
-//			int a = stat.executeUpdate(delStr);
 			
-
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		finally{
@@ -199,8 +135,8 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 		Connection connection = connectionProvider.getConnection();
 		PreparedStatement preparedStatementSelect = null;
 		ResultSet pw = null;
-		// TODO Auto-generated method stub
 		LinkedList<Reservation> list = new LinkedList<Reservation>();
+		
 		try {
 			preparedStatementSelect = connection.prepareStatement("SELECT customers.firstName , customers.lastName," +
 					" customers.telephoneNumber, reservations.reservationTime," +
@@ -258,19 +194,7 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 	}
 	
 	private Timestamp fromCalendar2Timestamp(Calendar calendar) {
-			        return (calendar == null ? null : new
-			java.sql.Timestamp(calendar.getTimeInMillis()));
-			}
+		return (calendar == null ? null : new java.sql.Timestamp(calendar.getTimeInMillis()));
+		}
 	
-//	private Connection createConnection() {
-//		try {
-//			conn = DriverManager.getConnection(dbConn.getConnection(), userName, password);
-//		} catch (SQLException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-	
-	//return connectionProvider.getConnection();
-	//}
-
 }

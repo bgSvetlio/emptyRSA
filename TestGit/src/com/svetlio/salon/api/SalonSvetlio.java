@@ -1,6 +1,6 @@
 package com.svetlio.salon.api;
 
-import java.util.Calendar;
+import java.util.Calendar; 
 
 import java.util.Collections;
 import java.util.Comparator;
@@ -8,24 +8,17 @@ import java.util.GregorianCalendar;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.svetlio.salon.database.JDBCreservationsDAOimpl;
 import com.svetlio.salon.database.SalonReservationDAO;
 import com.svetlio.salon.exceptions.ReservationCollisionExcetion;
-import com.svetlio.salon.model.Customer;
-import com.svetlio.salon.model.ManHairCut;
 import com.svetlio.salon.model.Reservation;
-import com.svetlio.salon.model.Service;
 
 
 public class SalonSvetlio implements Salon {
-	private SalonReservationDAO salonReservationDAO; // = new JDBCreservationsDAOimpl();
+	private SalonReservationDAO salonReservationDAO;
 	
 	public SalonSvetlio(SalonReservationDAO databaseDAO) {
 		salonReservationDAO = databaseDAO;
-		// TODO Auto-generated constructor stub
 	}
-
-	//inject with const
 
 	@Override
 	public boolean addReservation(Reservation reservation) throws ReservationCollisionExcetion {
@@ -51,7 +44,6 @@ public class SalonSvetlio implements Salon {
 
 	@Override
 	public List<Reservation> listReservations(int daysForward) {
-		// TODO Auto-generated method stub
 		Calendar dateToday = new GregorianCalendar();
 		LinkedList<Reservation> listForPrint= new LinkedList<Reservation>();
 		List<Reservation> listFromDB= salonReservationDAO.selectReservationsFromDB();
@@ -70,7 +62,6 @@ public class SalonSvetlio implements Salon {
 
 			@Override
 			public int compare(Reservation arg0, Reservation arg1) {
-				// TODO Auto-generated method stub
 				return arg0.getCalendar().compareTo(arg1.getCalendar());
 			}   
 			});

@@ -1,19 +1,14 @@
 package com.svetlio.salon.api;
 
-import java.util.Calendar;
-
+import java.util.Calendar; 
 
 import java.util.List;
 
-
-
-import com.svetlio.salon.database.SalonReservationDAO;
 import com.svetlio.salon.exceptions.ReservationCollisionExcetion;
 import com.svetlio.salon.model.Reservation;
 
 public interface Salon {
-	//public void setDataAccess(SalonReservationDAO salonReservationDAO);
-
+	
 	public boolean addReservation(Reservation reservation) throws ReservationCollisionExcetion;
 	
 	public Reservation removeReservation(Calendar reservationDate);

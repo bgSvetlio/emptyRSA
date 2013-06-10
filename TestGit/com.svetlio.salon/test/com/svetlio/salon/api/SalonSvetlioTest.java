@@ -43,7 +43,6 @@ public class SalonSvetlioTest {
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
 		testSalon = new SalonSvetlio(mockedDao);
-		//testSalon.setDataAccess(mockedDao);
 	}
 	
 
