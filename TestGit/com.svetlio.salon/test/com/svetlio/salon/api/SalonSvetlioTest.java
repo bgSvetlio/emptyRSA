@@ -13,7 +13,7 @@ import org.junit.Test;
 
 import com.svetlio.salon.database.JDBCreservationsDAOimpl;
 import com.svetlio.salon.database.SalonReservationDAO;
-import com.svetlio.salon.exceptions.ReservationCollision;
+import com.svetlio.salon.exceptions.ReservationCollisionExcetion;
 import com.svetlio.salon.model.Customer;
 import com.svetlio.salon.model.ManHairCut;
 import com.svetlio.salon.model.Reservation;
@@ -42,13 +42,13 @@ public class SalonSvetlioTest {
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		testSalon = new SalonSvetlio();
-		testSalon.setDataAccess(mockedDao);
+		testSalon = new SalonSvetlio(mockedDao);
+		//testSalon.setDataAccess(mockedDao);
 	}
 	
 
 	@Test
-	public void testAddReservation() throws ReservationCollision {
+	public void testAddReservation() throws ReservationCollisionExcetion {
 		LinkedList<Reservation> emptyList = new LinkedList<Reservation>();
 		when(mockedDao.saveReservationInDB(r1)).thenReturn(true);
 		when(mockedDao.selectReservationsFromDB()).thenReturn(emptyList);
@@ -58,8 +58,8 @@ public class SalonSvetlioTest {
 		
 	}
 	
-	@Test(expected = ReservationCollision.class)
-	public void testAddReservationExc() throws ReservationCollision{
+	@Test(expected = ReservationCollisionExcetion.class)
+	public void testAddReservationExc() throws ReservationCollisionExcetion{
 		Calendar cal = new GregorianCalendar();
 		when(r1.getCalendar()).thenReturn(cal);
 		when(r2.getCalendar()).thenReturn(cal);
@@ -81,7 +81,7 @@ public class SalonSvetlioTest {
 
 	
 	@Test
-	public void testListReservation() throws ReservationCollision{
+	public void testListReservation() throws ReservationCollisionExcetion{
 		Calendar cal = new GregorianCalendar();
 		Calendar cal1 = new GregorianCalendar(cal.get(GregorianCalendar.YEAR),cal.get(GregorianCalendar.MONTH),cal.get(GregorianCalendar.DAY_OF_MONTH));
 		Calendar cal2 = new GregorianCalendar(cal.get(GregorianCalendar.YEAR),cal.get(GregorianCalendar.MONTH),cal.get(GregorianCalendar.DAY_OF_MONTH)+1);

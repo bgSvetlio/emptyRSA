@@ -23,7 +23,7 @@ public class ServiceFactory {
 		return instance;
 	}
 	
-	public static Service getServiceInstance(int serviceTypeChoice){
+	public Service createServiceInstance(int serviceTypeChoice){
 		switch(serviceTypeChoice){
 		case 1: return new ManHairCut();
 		
@@ -38,7 +38,7 @@ public class ServiceFactory {
 		}
 	}
 	
-	public static Service getServiceInstance(String serviceTypeChoice){
+	public Service createServiceInstance(String serviceTypeChoice){
 		if(serviceTypeChoice.equalsIgnoreCase("man Hair Cut")){
 			return new ManHairCut();
 		}else if(serviceTypeChoice.equalsIgnoreCase("woman hair cut")){

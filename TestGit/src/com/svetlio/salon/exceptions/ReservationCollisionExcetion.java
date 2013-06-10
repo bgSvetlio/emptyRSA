@@ -10,21 +10,24 @@ import java.util.List;
 
 import com.svetlio.salon.database.JDBCreservationsDAOimpl;
 import com.svetlio.salon.database.SalonReservationDAO;
+import com.svetlio.salon.databasesConnection.ConnectionProvider;
+import com.svetlio.salon.databasesConnection.DerbyConnection;
 import com.svetlio.salon.model.Reservation;
 import com.svetlio.salon.model.Service;
 
 // Zashto e takuv konstruktura?
 // Tova ne si go gledal o6te mai ....
-public class ReservationCollision extends Exception {
+public class ReservationCollisionExcetion extends Exception {
 	
 	private Reservation reservation;
-	private SalonReservationDAO salonResrvationDAO = new JDBCreservationsDAOimpl();
+	ConnectionProvider connectionProvider = new DerbyConnection();
+	private SalonReservationDAO salonResrvationDAO = new JDBCreservationsDAOimpl(connectionProvider);
 	
 	public void setDataAccess(SalonReservationDAO salonReservationDAO){
 		this.salonResrvationDAO = salonReservationDAO;
 	}
 	
-	public ReservationCollision(Reservation reservation){
+	public ReservationCollisionExcetion(Reservation reservation){
 		this.reservation = reservation;
 	}
 	

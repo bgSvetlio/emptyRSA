@@ -10,7 +10,7 @@ import java.util.Scanner;
 
 import com.svetlio.salon.api.Salon;
 import com.svetlio.salon.api.SalonSvetlio;
-import com.svetlio.salon.exceptions.ReservationCollision;
+import com.svetlio.salon.exceptions.ReservationCollisionExcetion;
 import com.svetlio.salon.model.Customer;
 import com.svetlio.salon.model.ManHairCut;
 import com.svetlio.salon.model.Reservation;
@@ -144,11 +144,11 @@ public class ConsoleClient {
 		serviceTypeChoice = input.nextInt();
 		
 
-		if(ServiceFactory.getServiceInstance(serviceTypeChoice)== null){
+		if(ServiceFactory.getServiceFactory().createServiceInstance(serviceTypeChoice)== null){
 			System.out.println("You have entered non-existing service");
 			return;
 		}else{
-			service = ServiceFactory.getServiceInstance(serviceTypeChoice);
+			service = ServiceFactory.getServiceFactory().createServiceInstance(serviceTypeChoice);
 		}
 		
 		System.out.println();
@@ -176,7 +176,7 @@ public class ConsoleClient {
 			}else{
 				System.out.println("You failed to make a reservation!");
 			}
-		}catch(ReservationCollision exc){
+		}catch(ReservationCollisionExcetion exc){
 			//6te go dovur6a
 			System.out.println("There is a duplication of reservation hours.");
 			System.out.println("you can make a reservation:");

@@ -10,7 +10,7 @@ import java.util.List;
 
 import com.svetlio.salon.database.JDBCreservationsDAOimpl;
 import com.svetlio.salon.database.SalonReservationDAO;
-import com.svetlio.salon.exceptions.ReservationCollision;
+import com.svetlio.salon.exceptions.ReservationCollisionExcetion;
 import com.svetlio.salon.model.Customer;
 import com.svetlio.salon.model.ManHairCut;
 import com.svetlio.salon.model.Reservation;
@@ -18,21 +18,23 @@ import com.svetlio.salon.model.Service;
 
 
 public class SalonSvetlio implements Salon {
-	private SalonReservationDAO salonResrvationDAO = new JDBCreservationsDAOimpl();
+	private SalonReservationDAO salonReservationDAO; // = new JDBCreservationsDAOimpl();
 	
-	@Override
-	public void setDataAccess(SalonReservationDAO salonReservationDAO){
-		this.salonResrvationDAO = salonReservationDAO;
+	public SalonSvetlio(SalonReservationDAO databaseDAO) {
+		salonReservationDAO = databaseDAO;
+		// TODO Auto-generated constructor stub
 	}
 
+	//inject with const
+
 	@Override
-	public boolean addReservation(Reservation reservation) throws ReservationCollision {
+	public boolean addReservation(Reservation reservation) throws ReservationCollisionExcetion {
 		
 		if(collisionReservation(reservation)){
-			throw new ReservationCollision(reservation);
+			throw new ReservationCollisionExcetion(reservation);
 		}
 
-		if(salonResrvationDAO.saveReservationInDB(reservation)){
+		if(salonReservationDAO.saveReservationInDB(reservation)){
 			return true;
 		}
 		else return false;
@@ -42,7 +44,7 @@ public class SalonSvetlio implements Salon {
 	@Override
 	public Reservation removeReservation(Calendar reservationDate) {
 
-		Reservation reservation = salonResrvationDAO.deleteReservationFromDB(reservationDate);
+		Reservation reservation = salonReservationDAO.deleteReservationFromDB(reservationDate);
 		
 		return reservation;
 	}
@@ -52,7 +54,7 @@ public class SalonSvetlio implements Salon {
 		// TODO Auto-generated method stub
 		Calendar dateToday = new GregorianCalendar();
 		LinkedList<Reservation> listForPrint= new LinkedList<Reservation>();
-		List<Reservation> listFromDB= salonResrvationDAO.selectReservationsFromDB();
+		List<Reservation> listFromDB= salonReservationDAO.selectReservationsFromDB();
 		
 		for(int i=0;i<=daysForward;i++){
 			for(Reservation temp: listFromDB){
@@ -78,7 +80,7 @@ public class SalonSvetlio implements Salon {
 	
 	private boolean collisionReservation(Reservation reservation){
 
-		List<Reservation> listFromDB = salonResrvationDAO.selectReservationsFromDB();
+		List<Reservation> listFromDB = salonReservationDAO.selectReservationsFromDB();
 		
 		if(!listFromDB.isEmpty()){
 			for(Reservation temp: listFromDB){
