@@ -26,8 +26,7 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 	}
 
 	@Override
-	public boolean saveReservationInDB(Reservation reservation) {
-		int a=0,b=0;
+	public Reservation saveReservationInDB(Reservation reservation) {
 		Timestamp timeStamp=  fromCalendar2Timestamp(reservation.getCalendar());
 		Connection connection = connectionProvider.getConnection();
 		PreparedStatement preparedStatementReservation= null;
@@ -46,8 +45,11 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 			preparedStatementCustomers.setString(2, reservation.getCustomer().getLastName());
 			preparedStatementCustomers.setLong(3, reservation.getCustomer().getPhoneNumber());
 			
-			a=preparedStatementReservation.executeUpdate();
-			b=preparedStatementCustomers.executeUpdate();
+			int a=preparedStatementReservation.executeUpdate();
+			int b=preparedStatementCustomers.executeUpdate();
+			if(a==1&&b==1){
+				return reservation;
+			}else return null;
 			
 			
 		} catch (SQLException e) {
@@ -66,10 +68,7 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
             connection = null;
             }
 		}
-		
-		if(a==1&&b==1){
-			return true;
-		}else return false;
+		return null;
 		
 	}
 
@@ -90,16 +89,14 @@ public class JDBCreservationsDAOimpl implements SalonReservationDAO {
 					"WHERE reservations.reservationTime = "+ fromCal2TimeStampStr(calendar));
 
             pw = prestatGetBeforeDel.executeQuery();
-            while (pw.next())
-            {
-                
+            pw.next();
+            
                 Customer customer = new Customer(pw.getString(1), pw.getString(2), pw.getLong(3));
                 Calendar cal = Calendar.getInstance();
-                calendar.setTime(pw.getTimestamp(4));
+                cal.setTime(pw.getTimestamp(4));
                 Service service = ServiceFactory.getServiceFactory().createServiceInstance(pw.getString(5));
                 reservation = new Reservation(customer, service, cal);
-                
-            }
+            
 			preparedStatementDel = connection.prepareStatement(delStr);
 			preparedStatementDel.setTimestamp(1, fromCalendar2Timestamp(calendar));
 			preparedStatementDel.executeUpdate();

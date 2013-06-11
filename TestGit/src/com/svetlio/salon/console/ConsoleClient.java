@@ -261,8 +261,16 @@ public class ConsoleClient {
 		integerMinutes = (int)doubleMinutes;
 		
 		Calendar timeForCanceling = new GregorianCalendar(year, month-1, day, hour, integerMinutes);
-		
-		if(salonSvetlio.removeReservation(timeForCanceling)!= null){
+		Reservation reservationRemoved = salonSvetlio.removeReservation(timeForCanceling);
+		if(reservationRemoved!= null){
+			System.out.println();
+			System.out.println("Customer name:  "+ reservationRemoved.getCustomer().getFirstName() + "  "+ 
+					reservationRemoved.getCustomer().getLastName());
+			System.out.println("Customer telephone number:  "+ reservationRemoved.getCustomer().getPhoneNumber());
+			System.out.println("Service type:  "+ reservationRemoved.getService());
+			System.out.println("time for the appointment: ");
+			System.out.println(reservationRemoved.getCalendar().getTime());
+			System.out.println();
 			System.out.println("you have cancle this reservation");
 		}else {
 			System.out.println("There is no reservation with such date!");

@@ -1,8 +1,5 @@
 package com.svetlio.salon.api;
 
-import static org.junit.Assert.*; 
-
-
 import java.util.Calendar;
 import java.util.GregorianCalendar;
 import java.util.LinkedList;
@@ -11,13 +8,10 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
-import com.svetlio.salon.database.JDBCreservationsDAOimpl;
 import com.svetlio.salon.database.SalonReservationDAO;
 import com.svetlio.salon.exceptions.ReservationCollisionExcetion;
-import com.svetlio.salon.model.Customer;
 import com.svetlio.salon.model.ManHairCut;
 import com.svetlio.salon.model.Reservation;
-import com.svetlio.salon.model.Service;
 
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
@@ -49,7 +43,7 @@ public class SalonSvetlioTest {
 	@Test
 	public void testAddReservation() throws ReservationCollisionExcetion {
 		LinkedList<Reservation> emptyList = new LinkedList<Reservation>();
-		when(mockedDao.saveReservationInDB(r1)).thenReturn(true);
+		when(mockedDao.saveReservationInDB(r1)).thenReturn(r1);
 		when(mockedDao.selectReservationsFromDB()).thenReturn(emptyList);
 		Assert.assertEquals(testSalon.addReservation(r1),true);
 		verify(mockedDao).saveReservationInDB(r1);

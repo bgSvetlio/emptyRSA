@@ -27,7 +27,7 @@ public class SalonSvetlio implements Salon {
 			throw new ReservationCollisionExcetion(reservation);
 		}
 
-		if(salonReservationDAO.saveReservationInDB(reservation)){
+		if(salonReservationDAO.saveReservationInDB(reservation)!=null){
 			return true;
 		}
 		else return false;

@@ -6,7 +6,7 @@ import java.util.List;
 import com.svetlio.salon.model.Reservation;
 
 public interface SalonReservationDAO {
-	public boolean saveReservationInDB(Reservation reservation);
+	public Reservation saveReservationInDB(Reservation reservation);
 	public Reservation deleteReservationFromDB(Calendar calandar);
 	public List<Reservation> selectReservationsFromDB();
 
